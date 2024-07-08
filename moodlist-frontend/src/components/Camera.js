@@ -1,12 +1,26 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Camera } from "react-camera-pro";
+import axios from "axios";
+import { imageToFile } from "../utils";
 
 const Photo = () => {
   const camera = useRef(null);
   const [image, setImage] = useState(null);
 
-  const handleTakePhoto = () => {
-    setImage(camera.current.takePhoto());
+  const handleTakePhoto = async () => {
+    try {
+      const photo = await camera.current.takePhoto(); // Wait for photo to be taken
+      setImage(photo); // Update image state with the captured photo
+
+      const file = imageToFile(photo); // Convert image to file
+      const formData = new FormData();
+      formData.append("file", file); // Append file to FormData
+
+      const response = await axios.post("http://127.0.0.1:8000/api/upload/", formData);
+      console.log(response.data); // Log response data from backend
+    } catch (error) {
+      console.error("Error taking photo or uploading:", error);
+    }
   };
 
   return (
@@ -17,7 +31,7 @@ const Photo = () => {
         </div>
       </div>
       <button
-        onClick={() => setImage(camera.current.takePhoto())}
+        onClick={() => handleTakePhoto()}
         className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-md shadow hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
       >
         Take photo
