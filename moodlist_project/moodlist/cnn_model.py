@@ -1,3 +1,6 @@
+import torch
+import torch.nn as nn
+
 # make the model
 class MoodRecognitionModel(nn.Module):
     def __init__(self, input_shape, hidden_units, dropout_rate):

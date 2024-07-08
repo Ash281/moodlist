@@ -5,6 +5,10 @@ const Photo = () => {
   const camera = useRef(null);
   const [image, setImage] = useState(null);
 
+  const handleTakePhoto = () => {
+    setImage(camera.current.takePhoto());
+  };
+
   return (
     <div className="flex flex-col items-center justify-center h-full bg-black">
       <div className="w-full h-2/12">

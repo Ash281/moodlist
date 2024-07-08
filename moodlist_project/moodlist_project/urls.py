@@ -15,8 +15,17 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
+from moodlist import views # Add this line
+from moodlist.views import UploadPhotoAPIView # Add this line
+from django.conf import settings # Add this line
+from django.conf.urls.static import static # Add this line
+from django.conf.urls import url # Add this line
+from django.views.static import serve # Add this line
+from django.views.generic import TemplateView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('moodlist/', include('moodlist.urls')),
+    path('api/upload/', UploadPhotoAPIView.as_view(), name='upload') # Add this line
 ]
