@@ -17,10 +17,11 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from moodlist import views # Add this line
-from moodlist.views import UploadPhotoAPIView # Add this line
+from moodlist.views import UploadPhotoAPIView, GetMoodAPIView
 from django.views.generic import TemplateView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/upload/', UploadPhotoAPIView.as_view(), name='upload') # Add this line
+    path('api/upload/', UploadPhotoAPIView.as_view(), name='upload'),
+    path('api/get_mood/', GetMoodAPIView.as_view(), name='get_mood'),
 ]

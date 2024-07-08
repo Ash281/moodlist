@@ -11,6 +11,7 @@ from rest_framework.views import APIView
 from .helpers import preprocess_image
 from rest_framework.response import Response
 import os
+from .models import Mood
 
 current_dir = os.path.dirname(__file__)
 model_path = os.path.join(current_dir, 'mood_v2.pth')
@@ -29,8 +30,8 @@ class_names = ['angry', 'disgust', 'fear', 'happy', 'sad', 'surprise']
 
 class UploadPhotoAPIView(APIView):
     def post(self, request):
+        Mood.objects.all().delete()
         # Get the uploaded image
-        print(request)
         image = request.FILES['file']
 
         # Save the image to disk
@@ -54,9 +55,17 @@ class UploadPhotoAPIView(APIView):
 
             # Get the predicted mood
             predicted_mood = class_names[predicted_class]
-
+            Mood.objects.create(mood=predicted_mood)
             return Response({'predicted_mood': predicted_mood})  # Return JSON response
         else:
             return Response({'predicted_mood': 'No face detected in the image.'})
+        
+class GetMoodAPIView(APIView):
+    def get(self, request):
+        if Mood.objects.exists():
+            mood = Mood.objects.first().mood
+            return Response({'mood': mood})
+        else:
+            return Response({'mood': 'No mood detected.'})
 
 
