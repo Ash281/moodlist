@@ -6,7 +6,7 @@ const Photo = () => {
   const [image, setImage] = useState(null);
 
   return (
-    <div className="flex flex-col items-center justify-center h-full bg-gray-500">
+    <div className="flex flex-col items-center justify-center h-full bg-black">
       <div className="w-full h-2/12">
         <div className="relative w-full h-full">
           <Camera ref={camera} aspectRatio={9 / 16} className="absolute inset-0 w-full h-full" />
