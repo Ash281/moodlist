@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Camera } from "react-camera-pro";
 import axios from "axios";
-import { imageToFile } from "../utils";
+import { imageToFile, getMoodText } from "../utils";
 
 const Photo = () => {
   const camera = useRef(null);
@@ -39,10 +39,10 @@ const Photo = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center h-full bg-black">
+    <div className="flex flex-col h-full bg-black">
       {!photoTaken ? (
         <>
-          <div className="w-full h-2/12">
+          <div className="w-full h-2/12 items-center justify-center">
             <div className="relative w-full h-full">
               <Camera ref={camera} aspectRatio={9 / 16} className="absolute inset-0 w-full h-full" />
             </div>
@@ -61,7 +61,13 @@ const Photo = () => {
         </>
       ) : (
         <div className="mt-4 text-white">
-          <p className="text-white-500 font-extrabold">You look {mood}, so here's a {mood} playlist for you!</p>
+          <iframe 
+          style={{borderRadius: '12px' }} 
+          src="https://open.spotify.com/embed/playlist/3NID2u1NyZZTFKjJrDwIy4?utm_source=generator" 
+          width="100%" height="352" frameBorder="0" 
+          allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
+          loading="lazy"></iframe>
+          <p className="text-white-500 font-extrabold">{getMoodText(mood)}</p>
         </div>
       )}
     </div>
