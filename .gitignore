@@ -24,4 +24,9 @@ yarn-error.log*
 *.jpg
 
 build/
+static
+staticfiles
+venv
+db.sqlite3
+.DS_Store
 
