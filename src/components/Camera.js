@@ -11,7 +11,7 @@ const Photo = () => {
 
   const getMood = async () => {
     try {
-      const response = await axios.get("http://127.0.0.1:8000/api/get_mood/");
+      const response = await axios.get("https://moodlist.onrender.com/api/get_mood/");
       console.log(response.data);
       setMood(response.data.mood);
     }
@@ -29,7 +29,7 @@ const Photo = () => {
       const formData = new FormData();
       formData.append("file", file); // Append file to FormData
 
-      const response = await axios.post("http://127.0.0.1:8000/api/upload/", formData);
+      const response = await axios.post("https://moodlist.onrender.com/api/upload/", formData);
       console.log(response.data); // Log response data from backend
       getMood(); // Get mood from backend
       setPhotoTaken(true); // Set photoTaken state to true
