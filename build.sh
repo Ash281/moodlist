@@ -5,6 +5,7 @@ npm install
 npm run build
 pip install django
 pip install djangorestframework
+pip install django-cors-headers
 python3 manage.py makemigrations
 python3 manage.py migrate
 python3 manage.py collectstatic --noinput
