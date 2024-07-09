@@ -62,8 +62,9 @@ class UploadPhotoAPIView(APIView):
         
 class GetMoodAPIView(APIView):
     def get(self, request):
-        if Mood.objects.exists():
-            mood = Mood.objects.first().mood
+        first_mood = Mood.objects.first()
+        if first_mood:
+            mood = first_mood.mood
             return Response({'mood': mood})
         else:
             return Response({'mood': 'No mood detected.'})

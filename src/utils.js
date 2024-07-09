@@ -32,5 +32,7 @@ export const getMoodText = (mood) => {
             return "Scared? 😱 Here's a playlist to help you feel safe 🏠";
         case "disgust":
             return "Disgusted? 🤢 Here's a playlist to help you feel better 🌸";
+        default:
+            return "No mood detected";
     }
 }
