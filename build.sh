@@ -10,6 +10,7 @@ pip install whitenoise
 pip install torch
 pip install gunicorn
 pip install torchvision
+pip install facenet-pytorch
 python3 manage.py makemigrations
 python3 manage.py migrate
 python3 manage.py collectstatic --noinput
