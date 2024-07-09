@@ -3,6 +3,6 @@ venv\Scripts\activate
 pip install -r requirements.txt
 npm install
 npm run build
-python manage.py makemigrations
-python manage.py migrate
-python manage.py collectstatic --noinput
+python3 manage.py makemigrations
+python3 manage.py migrate
+python3 manage.py collectstatic --noinput
