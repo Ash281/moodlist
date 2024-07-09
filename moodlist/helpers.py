@@ -11,7 +11,7 @@ from rest_framework.views import APIView
 import os
 
 current_dir = os.path.dirname(__file__)
-model_path = os.path.join(current_dir, 'mood_v2.pth')
+model_path = os.path.join(current_dir, 'mood_v4.pth')
 # Define your class names for mood recognition
 class_names = ['angry', 'disgust', 'fear', 'happy', 'sad', 'surprise']
 
