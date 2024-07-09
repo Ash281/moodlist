@@ -19,7 +19,7 @@ class_names = ['angry', 'disgust', 'fear', 'happy', 'sad', 'surprise']
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 # Load the model (assuming `new_model` is already defined and loaded)
-new_model = MoodRecognitionModel(input_shape=1, hidden_units=128, dropout_rate=0.1)
+new_model = MoodRecognitionModel(input_shape=1, hidden_units=128, dropout_rate=0.25)
 checkpoint = torch.load(model_path, map_location=torch.device('cpu'))
 new_model.load_state_dict(checkpoint['model_state_dict'])
 new_model.eval()

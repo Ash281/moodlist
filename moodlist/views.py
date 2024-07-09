@@ -14,14 +14,14 @@ import os
 from .models import Mood
 
 current_dir = os.path.dirname(__file__)
-model_path = os.path.join(current_dir, 'mood_v2.pth')
+model_path = os.path.join(current_dir, 'mood_v4.pth')
 # Define your class names for mood recognition
 class_names = ['angry', 'disgust', 'fear', 'happy', 'sad', 'surprise']
 
 # Device configuration (assuming you have a GPU)
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-new_model = MoodRecognitionModel(input_shape=1, hidden_units=128, dropout_rate=0.1)
+new_model = MoodRecognitionModel(input_shape=1, hidden_units=128, dropout_rate=0.25)
 checkpoint = torch.load(model_path, map_location=torch.device('cpu'))
 new_model.load_state_dict(checkpoint['model_state_dict'])
 new_model.eval()
