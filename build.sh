@@ -9,6 +9,7 @@ pip install django-cors-headers
 pip install whitenoise
 pip install torch
 pip install gunicorn
+pip install torchvision
 python3 manage.py makemigrations
 python3 manage.py migrate
 python3 manage.py collectstatic --noinput

@@ -32,7 +32,7 @@ SECRET_KEY = 'django-insecure-6m^@_(bgzk%8(*ej!kj=z=d2w%tbv%8s9qsco@yijo4nag_n-&
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['moodlist.onrender.com', 'localhost:8000', '127.0.0.1:8000']
 
 
 # Application definition
