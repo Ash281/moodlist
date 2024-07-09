@@ -3,7 +3,7 @@ services:
     name: moodlist
     env: python
     buildCommand: ./build.sh
-    startCommand: gunicorn backend.moodlist_project.wsgi:application
+    startCommand: gunicorn moodlist_project.wsgi:application
     envVars:
       - key: DEBUG
         value: false
