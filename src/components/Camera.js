@@ -21,6 +21,19 @@ const Photo = () => {
     }
   };
 
+  const resetMood = async () => {
+    try {
+      // const response = await axios.get("https://moodlist.onrender.com/api/reset_mood/");
+      const response = await axios.post("http://127.0.0.1:8000/api/reset_mood/");
+      setMood(null);
+      setPhotoTaken(false);
+      setImage(null);
+    }
+    catch (error) {
+      console.error("Error resetting mood:", error);
+    }
+  }
+
   const handleTakePhoto = async () => {
     try {
       setLoading(true);
@@ -95,6 +108,12 @@ const Photo = () => {
                     loading="lazy"
                   ></iframe>
                   <p className="text-white-500 font-extrabold">{getMoodText(mood)}</p>
+                  <button
+                  onClick={() => resetMood()}
+                  className="justify-center mt-4 px-4 py-2 bg-blue-500 text-white rounded-md shadow hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+                  >
+                  Take another photo
+                  </button>
                 </>
               ) : (
                 <p className="text-white-500 font-extrabold">{getMoodText(mood)}</p>

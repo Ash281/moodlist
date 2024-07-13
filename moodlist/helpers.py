@@ -9,6 +9,14 @@ from facenet_pytorch import MTCNN
 from moodlist.cnn_model import MoodRecognitionModel
 from rest_framework.views import APIView
 import os
+from .models import SpotifyToken
+from datetime import datetime, timedelta
+from django.utils import timezone
+from requests import post
+
+SPOTIFY_CLIENT_ID = os.getenv("SPOTIFY_CLIENT_ID")
+SPOTIFY_CLIENT_SECRET = os.getenv("SPOTIFY_CLIENT_SECRET")
+REDIRECT_URI = 'http://127.0.0.1:8000/api/callback/'
 
 current_dir = os.path.dirname(__file__)
 model_path = os.path.join(current_dir, 'mood_v4.pth')
@@ -75,3 +83,48 @@ if face is not None and input_tensor is not None:
     probabilities = F.softmax(output, dim=1)
     predicted_class = torch.argmax(probabilities, dim=1).item()
  """
+
+def get_user_tokens(session_id):
+    print(session_id)
+    user_tokens = SpotifyToken.objects.filter(user=session_id)
+    print(user_tokens)
+    if user_tokens.exists():
+        return user_tokens[0]
+    else:
+        return None
+    
+def update_or_create_user_tokens(session_id, access_token, token_type, expires_in, refresh_token):
+    tokens = get_user_tokens(session_id)
+    # when the token expires as a timestamp
+    expires_in = timezone.now() + timedelta(seconds=expires_in)
+    if tokens:
+        tokens.access_token = access_token
+        tokens.token_type = token_type
+        tokens.expires_in = expires_in
+        tokens.refresh_token = refresh_token
+        tokens.save(update_fields=['access_token', 'token_type', 'expires_in', 'refresh_token'])
+    else:
+        tokens = SpotifyToken(user=session_id, access_token=access_token, token_type=token_type, expires_in=expires_in, refresh_token=refresh_token)
+        tokens.save()
+
+def is_spotify_authenticated(session_id):
+    user_tokens = get_user_tokens(session_id)
+    if user_tokens:
+        expiry = user_tokens.expires_in
+        if expiry <= timezone.now():
+            refresh_spotify_token(session_id)
+        return True
+    return False
+
+def refresh_spotify_token(session_id):
+    refresh_token = get_user_tokens(session_id).refresh_token
+    response = post('https://accounts.spotify.com/api/token', data={
+        'grant_type': 'refresh_token',
+        'refresh_token': refresh_token,
+        'client_id': SPOTIFY_CLIENT_ID,
+        'client_secret': SPOTIFY_CLIENT_SECRET,
+    }).json()
+    access_token = response.get('access_token')
+    token_type = response.get('token_type')
+    expires_in = response.get('expires_in')
+    update_or_create_user_tokens(session_id, access_token, token_type, expires_in, refresh_token)

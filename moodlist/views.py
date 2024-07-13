@@ -8,10 +8,10 @@ from PIL import Image
 from facenet_pytorch import MTCNN
 from moodlist.cnn_model import MoodRecognitionModel
 from rest_framework.views import APIView
-from .helpers import preprocess_image
+from .helpers import preprocess_image, get_user_tokens, update_or_create_user_tokens, is_spotify_authenticated
 from rest_framework.response import Response
 import os
-from .models import Mood
+from .models import Mood, SpotifyToken
 from django.conf import settings
 from django.shortcuts import redirect
 import base64
@@ -115,14 +115,16 @@ class CallbackAPIView(APIView):
         expires_in = response.get('expires_in')
         error = response.get('error')
 
-        if error:
-            return Response({'error': error})
-        else:
-            
+        if not request.session.exists(request.session.session_key):
+            request.session.create()
 
+        session_id = request.session.session_key
+        update_or_create_user_tokens(session_id, access_token, token_type, expires_in, refresh_token)
+
+        return redirect('http://127.0.0.1:3000/')
+            
 # check if the access token is available in the cookies
-class GetTokenAPIView(APIView):
+class IsAuthenticatedAPIView(APIView):
     def get(self, request):
-        print(request.COOKIES)
-        access_token = request.COOKIES.get('access_token')
-        return Response({'access_token': access_token})
+        is_authenticated = is_spotify_authenticated(request.session.session_key)
+        return Response({'is_authenticated': is_authenticated})

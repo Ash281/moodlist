@@ -17,7 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from moodlist import views # Add this line
-from moodlist.views import UploadPhotoAPIView, GetMoodAPIView, ResetMoodAPIView, GetTokenAPIView, CallbackAPIView
+from moodlist.views import UploadPhotoAPIView, GetMoodAPIView, ResetMoodAPIView, IsAuthenticatedAPIView, CallbackAPIView
 from django.views.generic import TemplateView
 from django.urls import re_path
 
@@ -28,6 +28,6 @@ urlpatterns = [
     path('api/reset_mood/', ResetMoodAPIView.as_view(), name='reset_mood'),
     path('api/login/', views.login, name='spotify-login'),
     path('api/callback/', CallbackAPIView.as_view(), name='spotify-callback'),
-    path('api/get_token/', GetTokenAPIView.as_view(), name='get-token'),
+    path('api/is_authenticated/', IsAuthenticatedAPIView.as_view(), name='is-authenticated'),
     re_path('.*', TemplateView.as_view(template_name='index.html')),
 ]

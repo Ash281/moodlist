@@ -8,27 +8,23 @@ import SpotifyLogin from './components/SpotifyLogin';
 function App() {
 
   const [mood, setMood] = useState(null);
-  const [token, setToken] = useState(null);
+  const [token, setToken] = useState(false);
 
   useEffect(() => {
-    const fetchToken = async () => {
+    const isAuthenticated = async () => {
       try {
-        // const response = await fetch('https://moodlist.onrender.com/api/get_token', {
-        const response = axios.get('http://127.0.0.1:8000/api/get_token', {
-          withCredentials: true,
-        });
-        const data = await response.json();
-        console.log('Data:', data);
-        if (data.access_token) {
-          console.log('Token:', data.access_token);
-          setToken(data.access_token);
-        }
-      } catch (error) {
-        console.error('Error fetching token:', error);
+        // const response = await axios.get("https://moodlist.onrender.com/api/is_authenticated/");
+        const response = await axios.get("http://127.0.0.1:8000/api/is_authenticated/",
+          { withCredentials: true }
+        );
+        console.log(response.data.is_authenticated);
+        setToken(response.data.is_authenticated);
       }
-    };
-
-    fetchToken();
+      catch (error) {
+        console.error("Error checking authentication:", error);
+      }
+    }
+    isAuthenticated();
   }, []);
 
   const getMood = async () => {
@@ -70,7 +66,7 @@ function App() {
       </div>
      
       <div className="flex-grow flex items-center justify-center">
-        {token !== null ? <Photo/> : <SpotifyLogin/>}
+        {token ? <Photo/> : <SpotifyLogin/>}
       </div>
     </div>
   );
