@@ -126,5 +126,19 @@ class CallbackAPIView(APIView):
 # check if the access token is available in the cookies
 class IsAuthenticatedAPIView(APIView):
     def get(self, request):
-        is_authenticated = is_spotify_authenticated(request.session.session_key)
-        return Response({'is_authenticated': is_authenticated})
+        print(self.request.session.session_key)
+        is_authenticated = is_spotify_authenticated(self.request.session.session_key)
+        return Response({'is_authenticated': is_authenticated, 'session_key': self.request.session.session_key})
+    
+class GetTopTracksAPIView(APIView):
+    def get(self, request):
+        print(self.request.session.session_key)
+        if is_spotify_authenticated(self.request.session.session_key):
+            user_tokens = get_user_tokens(self.request.session.session_key)
+            access_token = user_tokens.access_token
+            response = requests.get('https://api.spotify.com/v1/me/top/tracks', headers={
+                'Content-Type': 'application/json',
+                'Authorization': f'Bearer {access_token}'
+            })
+            return Response(response.json())
+        return Response({'error': 'User not authenticated'})

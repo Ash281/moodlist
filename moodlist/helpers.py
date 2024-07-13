@@ -12,7 +12,7 @@ import os
 from .models import SpotifyToken
 from datetime import datetime, timedelta
 from django.utils import timezone
-from requests import post
+from requests import post, get
 
 SPOTIFY_CLIENT_ID = os.getenv("SPOTIFY_CLIENT_ID")
 SPOTIFY_CLIENT_SECRET = os.getenv("SPOTIFY_CLIENT_SECRET")
@@ -106,6 +106,7 @@ def update_or_create_user_tokens(session_id, access_token, token_type, expires_i
     else:
         tokens = SpotifyToken(user=session_id, access_token=access_token, token_type=token_type, expires_in=expires_in, refresh_token=refresh_token)
         tokens.save()
+    print("Token updated or created: ", tokens)
 
 def is_spotify_authenticated(session_id):
     user_tokens = get_user_tokens(session_id)

@@ -1,5 +1,7 @@
+import axios from "axios";
+
 export const dataURItoBlob = (dataURI) => {
-    console.log(dataURI);
+    // console.log(dataURI);
     const byteString = atob(dataURI.split(",")[1]);
     const mimeString = dataURI.split(",")[0].split(":")[1].split(";")[0];
     const ab = new ArrayBuffer(byteString.length);
@@ -36,3 +38,4 @@ export const getMoodText = (mood) => {
             return "No mood detected";
     }
 }
+

@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Camera } from "react-camera-pro";
 import axios from "axios";
-import { imageToFile, getMoodText } from "../utils";
+import { imageToFile, getMoodText, fetchTopTracks } from "../utils";
 
 const Photo = () => {
   const camera = useRef(null);
@@ -9,6 +9,7 @@ const Photo = () => {
   const [photoTaken, setPhotoTaken] = useState(false);
   const [mood, setMood] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [topTracks, setTopTracks] = useState([]);
 
   const getMood = async () => {
     try {
@@ -94,19 +95,10 @@ const Photo = () => {
           ) : null}
 
           {photoTaken && !loading ? (
-            <div className="mt-4 text-white">
+            <div className="mt-4 text-white items-center justify-center text-center">
               {getMoodText(mood) !== "No mood detected" ? (
                 <>
-                  <iframe
-                    style={{ borderRadius: "12px" }}
-                    src="https://open.spotify.com/embed/playlist/3NID2u1NyZZTFKjJrDwIy4?utm_source=generator"
-                    width="100%"
-                    height="352"
-                    frameBorder="0"
-                    allowFullScreen=""
-                    allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-                    loading="lazy"
-                  ></iframe>
+                 
                   <p className="text-white-500 font-extrabold">{getMoodText(mood)}</p>
                   <button
                   onClick={() => resetMood()}
