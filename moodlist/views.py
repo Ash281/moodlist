@@ -12,6 +12,18 @@ from .helpers import preprocess_image
 from rest_framework.response import Response
 import os
 from .models import Mood
+from django.conf import settings
+from django.shortcuts import redirect
+import base64
+import requests
+import dotenv
+
+env_path = os.path.join(settings.BASE_DIR, '.env')
+dotenv.load_dotenv()
+
+SPOTIFY_CLIENT_ID = os.getenv("SPOTIFY_CLIENT_ID")
+SPOTIFY_CLIENT_SECRET = os.getenv("SPOTIFY_CLIENT_SECRET")
+REDIRECT_URI = 'http://127.0.0.1:8000/api/callback/'
 
 current_dir = os.path.dirname(__file__)
 model_path = os.path.join(current_dir, 'mood_v4.pth')
@@ -74,4 +86,43 @@ class ResetMoodAPIView(APIView):
         Mood.objects.all().delete()
         return Response({'message': 'Mood reset successfully.'})
 
+# redirect to Spotify login page for authentication and then redirect to the callback URL
+def login(request):
+    # Define the scopes for the Spotify API
+    scope = 'user-read-private user-read-email user-library-read user-top-read'
+    # Construct the URL for authentication on Spotify
+    auth_url = f"https://accounts.spotify.com/authorize?client_id={SPOTIFY_CLIENT_ID}&response_type=code&redirect_uri={REDIRECT_URI}&scope={scope}"
+    # Redirect to the Spotify authentication URL
+    return redirect(auth_url)
 
+# callback URL to get the access token
+class CallbackAPIView(APIView):
+    # extract auth code from the URL after authentication
+    def get(self, request):
+        code = request.GET.get('code')
+        
+        response = requests.post('https://accounts.spotify.com/api/token', data={
+            'grant_type': 'authorization_code',
+            'code': code,
+            'redirect_uri': REDIRECT_URI,
+            'client_id': SPOTIFY_CLIENT_ID,
+            'client_secret': SPOTIFY_CLIENT_SECRET
+        }).json()
+
+        access_token = response.get('access_token')
+        token_type = response.get('token_type')
+        refresh_token = response.get('refresh_token')
+        expires_in = response.get('expires_in')
+        error = response.get('error')
+
+        if error:
+            return Response({'error': error})
+        else:
+            
+
+# check if the access token is available in the cookies
+class GetTokenAPIView(APIView):
+    def get(self, request):
+        print(request.COOKIES)
+        access_token = request.COOKIES.get('access_token')
+        return Response({'access_token': access_token})

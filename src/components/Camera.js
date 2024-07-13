@@ -12,8 +12,8 @@ const Photo = () => {
 
   const getMood = async () => {
     try {
-      const response = await axios.get("https://moodlist.onrender.com/api/get_mood/");
-      // const response = await axios.get("http://127.0.0.1:8000/api/get_mood/");
+      // const response = await axios.get("https://moodlist.onrender.com/api/get_mood/");
+      const response = await axios.get("http://127.0.0.1:8000/api/get_mood/");
       setMood(response.data.mood);
     }
     catch (error) {
@@ -33,8 +33,8 @@ const Photo = () => {
 
       await new Promise((resolve) => setTimeout(resolve, 1000)); // Wait for 1 second
 
-      const response = await axios.post("https://moodlist.onrender.com/api/upload/", formData);
-      // const response = await axios.post("http://127.0.0.1:8000/api/upload/", formData);
+      // const response = await axios.post("https://moodlist.onrender.com/api/upload/", formData);
+      const response = await axios.post("http://127.0.0.1:8000/api/upload/", formData);
       getMood(); // Get mood from backend
       setPhotoTaken(true); // Set photoTaken state to true
     } catch (error) {

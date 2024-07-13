@@ -3,14 +3,38 @@ import Photo from './components/Camera';
 import logo from './logo.svg';
 import axios from 'axios';
 import { useState, useEffect } from 'react';
+import SpotifyLogin from './components/SpotifyLogin';
 
 function App() {
 
   const [mood, setMood] = useState(null);
+  const [token, setToken] = useState(null);
+
+  useEffect(() => {
+    const fetchToken = async () => {
+      try {
+        // const response = await fetch('https://moodlist.onrender.com/api/get_token', {
+        const response = axios.get('http://127.0.0.1:8000/api/get_token', {
+          withCredentials: true,
+        });
+        const data = await response.json();
+        console.log('Data:', data);
+        if (data.access_token) {
+          console.log('Token:', data.access_token);
+          setToken(data.access_token);
+        }
+      } catch (error) {
+        console.error('Error fetching token:', error);
+      }
+    };
+
+    fetchToken();
+  }, []);
+
   const getMood = async () => {
     try {
-      const response = await axios.get("https://moodlist.onrender.com/api/get_mood/");
-      // const response = await axios.get("http://127.0.0.1:8000/api/get_mood/");
+      // const response = await axios.get("https://moodlist.onrender.com/api/get_mood/");
+      const response = await axios.get("http://127.0.0.1:8000/api/get_mood/");
       setMood(response.data.mood);
     } catch (error) {
       console.error("Error getting mood:", error);
@@ -19,8 +43,8 @@ function App() {
 
   const resetMood = async () => {
     try {
-      const response = await axios.get("https://moodlist.onrender.com/api/reset_mood/");
-      // const response = await axios.post("http://127.0.0.1:8000/api/reset_mood/");
+      // const response = await axios.get("https://moodlist.onrender.com/api/reset_mood/");
+      const response = await axios.post("http://127.0.0.1:8000/api/reset_mood/");
       setMood(null);
     } catch (error) {
       console.error("Error resetting mood:", error);
@@ -46,7 +70,7 @@ function App() {
       </div>
      
       <div className="flex-grow flex items-center justify-center">
-        <Photo />
+        {token !== null ? <Photo/> : <SpotifyLogin/>}
       </div>
     </div>
   );

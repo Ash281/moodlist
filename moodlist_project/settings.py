@@ -12,6 +12,9 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 from pathlib import Path
 import os
+from dotenv import load_dotenv
+
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -32,9 +35,11 @@ SECRET_KEY = 'django-insecure-6m^@_(bgzk%8(*ej!kj=z=d2w%tbv%8s9qsco@yijo4nag_n-&
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['moodlist.onrender.com', 'localhost:8000', '127.0.0.1']
+CORS_ALLOW_CREDENTIALS = True
+ALLOWED_HOSTS = ['moodlist.onrender.com', 'http://localhost:3000', '127.0.0.1']
 
-
+SPOTIFY_CLIENT_ID = os.getenv("SPOTIFY_CLIENT_ID")
+SPOTIFY_CLIENT_SECRET = os.getenv("SPOTIFY_CLIENT_SECRET")
 # Application definition
 
 INSTALLED_APPS = [
