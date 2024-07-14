@@ -11,19 +11,7 @@ function App() {
   const [token, setToken] = useState(false);
   const [session, setSession] = useState(null);
   const [topTracks, setTopTracks] = useState([]);
-
-  const fetchTopTracks = async () => {
-    try {
-      // const response = await axios.get("https://moodlist.onrender.com/api/top_tracks/");
-      const response = await axios.get("http://127.0.0.1:8000/api/top_tracks/",
-        { withCredentials: true}
-      );
-      setTopTracks(response.data.top_tracks);
-    } catch (error) {
-      console.error("Error fetching top tracks:", error);
-    }
-  }
-
+  
   useEffect(() => {
     const isAuthenticated = async () => {
       try {
@@ -77,19 +65,14 @@ function App() {
           <span className="text-transparent bg-clip-text bg-gradient-to-r to-purple-600 from-sky-400">MoodList</span> 
         </h1>
         <h2 className="text-lg font-extrabold mb-2 text-white">Make a Spotify playlist based on your mood</h2>
-        
+
       </div>
 
       <div className="flex-grow flex items-center justify-center">
         {token ? 
          <div className="flex flex-col items-center justify-center">
             <Photo/>         
-         <button
-           onClick={() => fetchTopTracks()}
-           className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-md shadow hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
-         >
-           Get playlist
-         </button>
+       
        </div>
        : <SpotifyLogin/>}
       </div>

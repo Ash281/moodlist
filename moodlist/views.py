@@ -134,6 +134,7 @@ class GetTopTracksAPIView(APIView):
     def get(self, request):
         print(self.request.session.session_key)
         if is_spotify_authenticated(self.request.session.session_key):
+            print("Authenticated")
             user_tokens = get_user_tokens(self.request.session.session_key)
             access_token = user_tokens.access_token
             response = requests.get('https://api.spotify.com/v1/me/top/tracks', headers={
