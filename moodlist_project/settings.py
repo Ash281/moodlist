@@ -36,7 +36,7 @@ SECRET_KEY = 'django-insecure-6m^@_(bgzk%8(*ej!kj=z=d2w%tbv%8s9qsco@yijo4nag_n-&
 DEBUG = True
 
 CORS_ALLOW_CREDENTIALS = True
-ALLOWED_HOSTS = ['https://moodlist.onrender.com', 'http://localhost:3000', '127.0.0.1']
+ALLOWED_HOSTS = ['moodlist.onrender.com', 'http://localhost:3000', '127.0.0.1']
 
 SPOTIFY_CLIENT_ID = os.getenv("SPOTIFY_CLIENT_ID")
 SPOTIFY_CLIENT_SECRET = os.getenv("SPOTIFY_CLIENT_SECRET")
