@@ -23,7 +23,8 @@ dotenv.load_dotenv()
 
 SPOTIFY_CLIENT_ID = os.getenv("SPOTIFY_CLIENT_ID")
 SPOTIFY_CLIENT_SECRET = os.getenv("SPOTIFY_CLIENT_SECRET")
-REDIRECT_URI = 'http://127.0.0.1:8000/api/callback/'
+# REDIRECT_URI = 'http://127.0.0.1:8000/api/callback/'
+REDIRECT_URI = 'https://moodlist.onrender.com/api/callback/'
 
 current_dir = os.path.dirname(__file__)
 model_path = os.path.join(current_dir, 'mood_v4.pth')
