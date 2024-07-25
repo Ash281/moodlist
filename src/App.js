@@ -15,7 +15,7 @@ function App() {
   useEffect(() => {
     const isAuthenticated = async () => {
       try {
-        const response = await axios.get("https://moodlist.onrender.com/api/is_authenticated/");
+        const response = await axios.get("https://moodlist.onrender.com/api/is_authenticated/",
         // const response = await axios.get("http://127.0.0.1:8000/api/is_authenticated/",
           { withCredentials: true }
         );
