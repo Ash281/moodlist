@@ -89,6 +89,9 @@ class ResetMoodAPIView(APIView):
 
 # redirect to Spotify login page for authentication and then redirect to the callback URL
 def login(request):
+    print(SPOTIFY_CLIENT_ID)
+    print(REDIRECT_URI)
+    print(SPOTIFY_CLIENT_SECRET)
     # Define the scopes for the Spotify API
     scope = 'user-read-private user-read-email user-library-read user-top-read playlist-modify-public playlist-modify-private'
     # Construct the URL for authentication on Spotify
