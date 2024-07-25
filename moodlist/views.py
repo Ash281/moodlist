@@ -121,7 +121,8 @@ class CallbackAPIView(APIView):
         session_id = request.session.session_key
         update_or_create_user_tokens(session_id, access_token, token_type, expires_in, refresh_token)
 
-        return redirect('http://127.0.0.1:3000/')
+        return redirect('http://moodlist.onrender.com/')
+        # return redirect('http://127.0.0.1:3000/')
             
 # check if the access token is available in the cookies
 class IsAuthenticatedAPIView(APIView):
