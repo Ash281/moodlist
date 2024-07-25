@@ -39,3 +39,22 @@ export const getMoodText = (mood) => {
     }
 }
 
+export const getSongsByMood = (mood, playlist) => {
+    switch (mood) {
+        case "happy":
+            return playlist.filter((track) => track.valence > 0.5);
+        case "sad":
+            return playlist.filter((track) => track.valence < 0.5 && track.energy < 0.5);
+        case "angry":
+            return playlist.filter((track) => track.energy < 0.3 && track.valence < 0.7);
+        case "surprise":
+            return playlist.filter((track) => track.energy > 0.5 && track.valence > 0.5);
+        case "fear":
+            return playlist.filter((track) => track.valence < 0.5 && track.energy < 0.5);
+        case "disgust":
+            return playlist.filter((track) => track.valence < 0.5 && track.energy < 0.5);
+        default:
+            return playlist;
+    }
+}
+

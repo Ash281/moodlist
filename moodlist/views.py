@@ -89,7 +89,7 @@ class ResetMoodAPIView(APIView):
 # redirect to Spotify login page for authentication and then redirect to the callback URL
 def login(request):
     # Define the scopes for the Spotify API
-    scope = 'user-read-private user-read-email user-library-read user-top-read'
+    scope = 'user-read-private user-read-email user-library-read user-top-read playlist-modify-public playlist-modify-private'
     # Construct the URL for authentication on Spotify
     auth_url = f"https://accounts.spotify.com/authorize?client_id={SPOTIFY_CLIENT_ID}&response_type=code&redirect_uri={REDIRECT_URI}&scope={scope}"
     # Redirect to the Spotify authentication URL
@@ -132,14 +132,120 @@ class IsAuthenticatedAPIView(APIView):
     
 class GetTopTracksAPIView(APIView):
     def get(self, request):
-        print(self.request.session.session_key)
-        if is_spotify_authenticated(self.request.session.session_key):
+        mood = request.query_params.get('mood')
+        print("Mood:", mood)
+
+        if is_spotify_authenticated(request.session.session_key):
             print("Authenticated")
-            user_tokens = get_user_tokens(self.request.session.session_key)
+            user_tokens = get_user_tokens(request.session.session_key)
             access_token = user_tokens.access_token
-            response = requests.get('https://api.spotify.com/v1/me/top/tracks', headers={
+
+            # Fetch liked songs from Spotify
+            response = requests.get('https://api.spotify.com/v1/me/tracks', headers={
                 'Content-Type': 'application/json',
                 'Authorization': f'Bearer {access_token}'
-            })
-            return Response(response.json())
-        return Response({'error': 'User not authenticated'})
+            },
+            params={'limit': 50}
+            )
+
+            print("Status Code:", response.status_code)
+            print("Response Text:", response.text)  # Log the raw response text
+
+            if response.status_code == 200:
+                try:
+                    tracks = response.json()['items']
+                    print(len(tracks), "tracks found")
+                    filtered_tracks = filter_songs_by_mood(mood, request, tracks)
+                    
+                    # Limit to 50 tracks
+                    track_ids = [track['uri'] for track in filtered_tracks][:50]
+                    
+                    playlist_id = create_playlist(track_ids, access_token, mood)
+                    print("Playlist ID:", playlist_id)
+                    
+                    for uri in track_ids:
+                        print(uri)
+                    
+                    return Response({'playlist_id': playlist_id})
+                except ValueError as e:
+                    print("Error parsing JSON:", e)
+                    return Response({'error': 'Failed to parse response from Spotify'}, status=500)
+            else:
+                return Response({'error': 'Failed to fetch liked songs from Spotify', 'details': response.text}, status=response.status_code)
+
+        return Response({'error': 'User not authenticated'}, status=401)
+
+
+    
+def filter_songs_by_mood(mood, request, tracks):
+    filtered_tracks = []
+    for item in tracks:
+        track = item['track']  # Extract the track info
+        track_id = track['id']
+        print(mood)
+        if is_spotify_authenticated(request.session.session_key):
+            print("Authenticated")
+            user_tokens = get_user_tokens(request.session.session_key)
+            access_token = user_tokens.access_token
+            track_features = get_track_features(track_id, access_token)
+            if track_features:
+                if mood == 'happy' and track_features['valence'] > 0.6:
+                    filtered_tracks.append(track)
+                elif mood == 'sad' and track_features['valence'] < 0.4:
+                    filtered_tracks.append(track)
+                elif mood == 'angry' and track_features['energy'] < 0.4 and track_features['valence'] < 0.6:
+                    filtered_tracks.append(track)
+                elif mood == 'surprise' and track_features['valence'] > 0.4 and track_features['energy'] > 0.6:
+                    filtered_tracks.append(track)
+                elif mood == 'fear' and track_features['valence'] > 0.5 and track_features['energy'] < 0.5:
+                    filtered_tracks.append(track)
+                elif mood == 'disgust' and track_features['valence'] < 0.5 and track_features['energy'] > 0.5:
+                    filtered_tracks.append(track)
+    return filtered_tracks
+
+    
+def get_track_features(track_id, access_token):
+    response = requests.get(f'https://api.spotify.com/v1/audio-features/{track_id}', headers={
+        'Content-Type': 'application/json',
+        'Authorization': f'Bearer {access_token}'
+    })
+    if response.status_code == 200:
+        return response.json()
+    return None
+
+def create_playlist(track_ids, access_token, mood):
+    # Remove duplicates and limit to 50
+    track_ids = list(set(track_ids))[:50]
+    
+    response = requests.post('https://api.spotify.com/v1/me/playlists', headers={
+        'Content-Type': 'application/json',
+        'Authorization': f'Bearer {access_token}'
+    }, json={
+        'name': f'Moodlist: {mood}',
+        'description': 'Playlist generated by Moodlist',
+        'public': True
+    })
+    
+    if response.status_code == 201:
+        playlist_id = response.json()['id']
+        add_tracks_to_playlist(playlist_id, track_ids, access_token)
+        return playlist_id
+    return None
+
+def add_tracks_to_playlist(playlist_id, track_ids, access_token):
+    track_ids = list(set(track_ids))[:50]  # Ensure only unique tracks and limit to 50
+
+    while track_ids:
+        batch = track_ids[:100]  # Spotify API allows up to 100 tracks per request
+        track_ids = track_ids[100:]
+        response = requests.post(f'https://api.spotify.com/v1/playlists/{playlist_id}/tracks', headers={
+            'Content-Type': 'application/json',
+            'Authorization': f'Bearer {access_token}'
+        }, json={
+            'uris': batch
+        })
+        if response.status_code != 201:
+            return False
+    return True
+
+

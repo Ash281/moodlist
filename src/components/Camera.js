@@ -9,7 +9,7 @@ const Photo = () => {
   const [photoTaken, setPhotoTaken] = useState(false);
   const [mood, setMood] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [topTracks, setTopTracks] = useState([]);
+  const [playlist, setPlaylist] = useState([]);
   const [token, setToken] = useState(false);
   const [session, setSession] = useState(null);
 
@@ -34,19 +34,21 @@ const Photo = () => {
   useEffect(() => {
     const fetchTopTracks = async () => {
       try {
-        // const response = await axios.get("https://moodlist.onrender.com/api/top_tracks/");
-        const response = await axios.get("http://127.0.0.1:8000/api/top_tracks/",
-          { withCredentials: true }
-        );
-        console.log("top tracks" + response.data.items[0].id);
-        setTopTracks(response.data.items[0].id);
+        const response = await axios.get(`http://127.0.0.1:8000/api/top_tracks/?mood=${mood}`, {
+          withCredentials: true
+        });
+        console.log("playlist", response.data.playlist_id);
+        setPlaylist(response.data.playlist_id);
       } catch (error) {
         console.error("Error fetching top tracks:", error);
       }
+    };
+  
+    if (mood) {
+      fetchTopTracks();
     }
-    fetchTopTracks();
-  }, []);
-
+  }, [mood]);
+    
   const getMood = async () => {
     try {
       // const response = await axios.get("https://moodlist.onrender.com/api/get_mood/");
@@ -136,13 +138,13 @@ const Photo = () => {
             <>
               <div className="flex flex-col items-center justify-center">
                 <iframe
-                  src={`https://open.spotify.com/embed/track/${topTracks}`}
+                  title="Spotify Playlist"
+                  src={`https://open.spotify.com/embed/playlist/${playlist}`}
                   width="300"
                   height="380"
                   frameBorder="0"
                   allowtransparency="true"
                   allow="encrypted-media"
-                  className="m-4"
                 ></iframe>
               </div>
               <p className="text-white font-extrabold">{getMoodText(mood)}</p>
