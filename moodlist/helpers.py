@@ -14,6 +14,8 @@ from datetime import datetime, timedelta
 from django.utils import timezone
 from requests import post, get
 
+
+
 SPOTIFY_CLIENT_ID = os.getenv("SPOTIFY_CLIENT_ID")
 SPOTIFY_CLIENT_SECRET = os.getenv("SPOTIFY_CLIENT_SECRET")
 # REDIRECT_URI = 'http://127.0.0.1:8000/api/callback/'

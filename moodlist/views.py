@@ -89,6 +89,7 @@ class ResetMoodAPIView(APIView):
 
 # redirect to Spotify login page for authentication and then redirect to the callback URL
 def login(request):
+    print("Login")
     print(SPOTIFY_CLIENT_ID)
     print(REDIRECT_URI)
     print(SPOTIFY_CLIENT_SECRET)
@@ -126,7 +127,7 @@ class CallbackAPIView(APIView):
         update_or_create_user_tokens(session_id, access_token, token_type, expires_in, refresh_token)
 
         return redirect('https://moodlist.onrender.com/')
-        # return redirect('http://127.0.0.1:3000/')
+        # return redirect('http://127.0.0.1:8000/')
             
 # check if the access token is available in the cookies
 class IsAuthenticatedAPIView(APIView):

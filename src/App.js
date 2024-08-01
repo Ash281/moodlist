@@ -15,7 +15,7 @@ function App() {
   useEffect(() => {
     const isAuthenticated = async () => {
       try {
-        const response = await axios.get("https://moodlist.onrender.com/api/is_authenticated/",
+        const response = await axios.get("/api/is_authenticated/",
         // const response = await axios.get("http://127.0.0.1:8000/api/is_authenticated/",
           { withCredentials: true }
         );
@@ -32,7 +32,7 @@ function App() {
 
   const getMood = async () => {
     try {
-      const response = await axios.get("https://moodlist.onrender.com/api/get_mood/");
+      const response = await axios.get("/api/get_mood/");
       // const response = await axios.get("http://127.0.0.1:8000/api/get_mood/");
       setMood(response.data.mood);
     } catch (error) {
@@ -42,7 +42,7 @@ function App() {
 
   const resetMood = async () => {
     try {
-      const response = await axios.get("https://moodlist.onrender.com/api/reset_mood/");
+      const response = await axios.get("/api/reset_mood/");
       // const response = await axios.post("http://127.0.0.1:8000/api/reset_mood/");
       setMood(null);
     } catch (error) {

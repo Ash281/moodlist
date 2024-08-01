@@ -20,7 +20,7 @@ const Photo = () => {
         // const response = await axios.get("http://127.0.0.1:8000/api/is_authenticated/",
         //  { withCredentials: true }
         // );
-        const response = await axios.get("https://moodlist.onrender.com/api/is_authenticated/", {
+        const response = await axios.get("/api/is_authenticated/", {
           withCredentials: true
         });
         console.log(response.data.is_authenticated);
@@ -40,7 +40,7 @@ const Photo = () => {
         // const response = await axios.get(`http://127.0.0.1:8000/api/top_tracks/?mood=${mood}`, {
         //  withCredentials: true
         // });
-        const response = await axios.get(`https://moodlist.onrender.com/api/top_tracks/?mood=${mood}`, {
+        const response = await axios.get(`/api/top_tracks/?mood=${mood}`, {
           withCredentials: true
         });
         console.log("playlist", response.data.playlist_id);
@@ -57,7 +57,7 @@ const Photo = () => {
     
   const getMood = async () => {
     try {
-      const response = await axios.get("https://moodlist.onrender.com/api/get_mood/");
+      const response = await axios.get("/api/get_mood/");
       // const response = await axios.get("http://127.0.0.1:8000/api/get_mood/");
       setMood(response.data.mood);
     }
@@ -68,7 +68,7 @@ const Photo = () => {
 
   const resetMood = async () => {
     try {
-      const response = await axios.get("https://moodlist.onrender.com/api/reset_mood/");
+      const response = await axios.get("/api/reset_mood/");
       // const response = await axios.post("http://127.0.0.1:8000/api/reset_mood/");
       setMood(null);
       setPhotoTaken(false);
@@ -91,7 +91,7 @@ const Photo = () => {
 
       await new Promise((resolve) => setTimeout(resolve, 1000)); // Wait for 1 second
 
-      const response = await axios.post("https://moodlist.onrender.com/api/upload/", formData);
+      const response = await axios.post("/api/upload/", formData);
       // const response = await axios.post("http://127.0.0.1:8000/api/upload/", formData);
       getMood(); // Get mood from backend
       setPhotoTaken(true); // Set photoTaken state to true
