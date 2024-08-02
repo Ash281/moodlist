@@ -17,7 +17,11 @@ from requests import post, get
 
 
 SPOTIFY_CLIENT_ID = os.getenv("SPOTIFY_CLIENT_ID")
+if SPOTIFY_CLIENT_ID is None:
+    raise Exception("SPOTIFY_CLIENT_ID not found in environment variables")
 SPOTIFY_CLIENT_SECRET = os.getenv("SPOTIFY_CLIENT_SECRET")
+if SPOTIFY_CLIENT_SECRET is None:
+    raise Exception("SPOTIFY_CLIENT_SECRET not found in environment variables")
 # REDIRECT_URI = 'http://127.0.0.1:8000/api/callback/'
 REDIRECT_URI_PROD = 'https://moodlist.onrender.com/api/callback/'
 
