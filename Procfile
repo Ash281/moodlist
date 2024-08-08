@@ -1,1 +1,0 @@
-web: ./build.sh && gunicorn moodlist_project.wsgi --log-file -
