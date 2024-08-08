@@ -24,7 +24,7 @@ dotenv.load_dotenv()
 SPOTIFY_CLIENT_ID = os.getenv("SPOTIFY_CLIENT_ID")
 SPOTIFY_CLIENT_SECRET = os.getenv("SPOTIFY_CLIENT_SECRET")
 # REDIRECT_URI = 'http://127.0.0.1:8000/api/callback/'
-REDIRECT_URI = 'https://moodlist.onrender.com/api/callback/'
+REDIRECT_URI = 'https://moodlist-production.up.railway.app/api/callback/'
 
 current_dir = os.path.dirname(__file__)
 model_path = os.path.join(current_dir, 'mood_v4.pth')
@@ -126,7 +126,7 @@ class CallbackAPIView(APIView):
         session_id = request.session.session_key
         update_or_create_user_tokens(session_id, access_token, token_type, expires_in, refresh_token)
 
-        return redirect('https://moodlist.onrender.com/')
+        return redirect('https://moodlist-production.up.railway.app/')
         # return redirect('http://127.0.0.1:8000/')
             
 # check if the access token is available in the cookies

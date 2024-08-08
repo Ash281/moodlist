@@ -23,7 +23,7 @@ SPOTIFY_CLIENT_SECRET = os.getenv("SPOTIFY_CLIENT_SECRET")
 if SPOTIFY_CLIENT_SECRET is None:
     raise Exception("SPOTIFY_CLIENT_SECRET not found in environment variables")
 # REDIRECT_URI = 'http://127.0.0.1:8000/api/callback/'
-REDIRECT_URI_PROD = 'https://moodlist.onrender.com/api/callback/'
+REDIRECT_URI_PROD = 'https://moodlist-production.up.railway.app/api/callback/'
 
 current_dir = os.path.dirname(__file__)
 model_path = os.path.join(current_dir, 'mood_v4.pth')
