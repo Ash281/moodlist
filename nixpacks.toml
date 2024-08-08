@@ -1,0 +1,5 @@
+[build]
+command = "./build.sh"  # Path to your build script
+
+[start]
+command = "gunicorn moodlist_project.wsgi --log-file -"  # Command to start your Django application
