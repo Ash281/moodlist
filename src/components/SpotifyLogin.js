@@ -2,7 +2,7 @@ import React from 'react';
 
 const SpotifyLogin = () => {
     // const loginURL = 'http://127.0.0.1:8000/api/login/';
-    const loginURL = 'https://moodlist-production.up.railway.app/api/login';
+    const loginURL = 'https://moodlist-production.up.railway.app/api/login/';
   return (
     <div>
       <a href={loginURL}>
