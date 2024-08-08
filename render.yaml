@@ -1,9 +1,0 @@
-services:
-  - type: web
-    name: moodlist
-    env: python
-    buildCommand: ./build.sh
-    startCommand: gunicorn moodlist_project.wsgi:application
-    envVars:
-      - key: DEBUG
-        value: false
